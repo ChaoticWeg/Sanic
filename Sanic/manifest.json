@@ -6,5 +6,7 @@
 	"UniqueID": "cc.chaoticweg.stardew.sanic",
 	"EntryDll": "Sanic.dll",
 	"MinimumApiVersion": "2.10.0",
-	"UpdateKeys": []
+	"UpdateKeys": [
+		"GitHub:ChaoticWeg/Sanic"
+	]
 }
