@@ -1,0 +1,10 @@
+﻿{
+	"Name": "Sanic",
+	"Author": "ChaoticWeg",
+	"Version": "1.0.0",
+	"Description": "Increases player run/walk speed.",
+	"UniqueID": "cc.chaoticweg.stardew.sanic",
+	"EntryDll": "Sanic.dll",
+	"MinimumApiVersion": "2.10.0",
+	"UpdateKeys": []
+}
