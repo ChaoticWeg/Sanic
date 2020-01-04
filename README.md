@@ -1,8 +1,6 @@
-## Sanic
+# Sanic
 
 A Stardew Valley mod that allows the player to sprint using the spacebar.
-
----
 
 ### How to sprint
 
