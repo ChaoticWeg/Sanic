@@ -8,7 +8,7 @@ namespace Sanic
     {
         public ModConfig Config { get; private set; }
 
-        private bool isSprinting = false;
+        public bool IsSprinting { get; private set; } = false;
 
         public SprintHelper(ModConfig config, IModHelper helper)
         {
@@ -18,45 +18,68 @@ namespace Sanic
 
         public void OnUpdateTicking(object _, UpdateTickingEventArgs args)
         {
-            // stop sprinting immediately and bail out if the run/walk button is held
-            if (IsRunWalkButtonHeld() && isSprinting)
+            // stop sprinting immediately if the run/walk button is held
+            if (IsRunWalkButtonHeld && IsSprinting)
             {
-                isSprinting = false;
-                return;
+                IsSprinting = false;
             }
 
+            // bail out if we are not sprinting
+            if (!IsSprinting)
+                return;
+
             // set speed to sprint speed if we are sprinting and speed is less than sprint speed
-            if (isSprinting && Game1.player.Speed < Config.SprintSpeed)
+            if (Game1.player.Speed < Config.SprintSpeed)
             {
-                Game1.player.Speed = Config.SprintSpeed;
+                ForceSprintSpeed();
             }
 
             // remove some stamina if we have been sprinting for long enough
             if (args.Ticks % Config.StaminaLossTickCount == 0)
             {
-                Game1.player.Stamina -= Game1.player.MaxStamina * Config.StaminaLossModifier;
+                RemoveStamina();
             }
         }
 
         public void OnSprintKeyPressed(object _, ButtonPressedEventArgs args)
         {
             // sprint only if the player is not currently holding the run/walk button
-            if (IsRunWalkButtonHeld())
+            if (IsRunWalkButtonHeld)
                 return;
 
-            isSprinting = true;
+            IsSprinting = true;
         }
 
         public void OnSprintKeyReleased(object _, ButtonReleasedEventArgs args)
         {
             // no matter what, when sprint key is released, stop sprinting.
-            isSprinting = false;
+            IsSprinting = false;
         }
 
-        public bool IsRunWalkButtonHeld()
+        public bool IsRunWalkButtonHeld
         {
-            // run button is NOT being held when all of the assigned run keys are up
-            return !Game1.areAllOfTheseKeysUp(Game1.GetKeyboardState(), Game1.options.runButton);
+            get
+            {
+                // run button is NOT being held when all of the assigned run keys are up
+                return !Game1.areAllOfTheseKeysUp(Game1.GetKeyboardState(), Game1.options.runButton);
+            }
+        }
+
+        private void RemoveStamina()
+        {
+            // don't remove stamina if we aren't sprinting or if we can't move
+            if (!IsSprinting || !Context.CanPlayerMove)
+                return;
+
+            Game1.player.Stamina -= Game1.player.MaxStamina * Config.StaminaLossModifier;
+        }
+
+        private void ForceSprintSpeed()
+        {
+            if (!IsSprinting)
+                return;
+
+            Game1.player.Speed = Config.SprintSpeed;
         }
     }
 }
