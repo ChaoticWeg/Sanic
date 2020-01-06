@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ModConfig.cs" />
+    <Compile Include="SprintHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
